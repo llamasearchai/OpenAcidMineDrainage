@@ -50,6 +50,8 @@ def anova_by_site(df: pd.DataFrame, parameter: str) -> AnovaResult:
 def _design_matrix(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
     # Encode site_type; drop_first to avoid multicollinearity
     X_cat = pd.get_dummies(df["site_type"], prefix="site", drop_first=True)
+    # Convert boolean columns to int to avoid dtype issues
+    X_cat = X_cat.astype(int)
     # Time index feature
     t0 = df["timestamp"].min()
     time_idx = (df["timestamp"] - t0).dt.total_seconds() / 3600.0  # hours since start

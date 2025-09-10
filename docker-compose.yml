@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  oamd:
+    build:
+      context: .
+      target: production
+    container_name: open-acid-mine-drainage
+    restart: unless-stopped
+
+    # Orbstack optimizations
+    platform: linux/amd64
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+
+    # Environment configuration
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app/src
+      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+
+    # Volume mounts for data persistence
+    volumes:
+      - ./artifacts:/app/artifacts:rw
+      - ./data:/app/data:ro
+      - /tmp:/tmp:rw
+
+    # Resource limits (Orbstack optimized)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import oamd; print('healthy')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Networking
+    networks:
+      - oamd-network
+
+  # Optional: Add a data processing service
+  oamd-worker:
+    build:
+      context: .
+      target: base
+    container_name: oamd-worker
+    profiles: ["worker"]
+    restart: unless-stopped
+
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app/src
+      - LOG_LEVEL=INFO
+
+    volumes:
+      - ./artifacts:/app/artifacts:rw
+      - ./data:/app/data:ro
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    networks:
+      - oamd-network
+
+networks:
+  oamd-network:
+    driver: bridge
+    name: oamd-network
+
+volumes:
+  oamd-artifacts:
+    driver: local
+    name: oamd-artifacts

@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "open-acid-mine-drainage"
-version = "0.1.0"
+version = "1.0.0"
 description = "Comprehensive Python monitoring and analysis system for acid mine drainage (AMD) protection evidence."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
   { name = "OpenAcidMineDrainage Maintainers" }
@@ -36,6 +36,9 @@ dependencies = [
   "pydantic>=2.5",
   "PyYAML>=6.0",
   "requests>=2.31",
+  "openai>=1.0",
+  "openai-agents>=0.0.1",
+  "python-dotenv>=1.0",
 ]
 
 [project.urls]
@@ -79,11 +82,11 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py39"
 extend-select = ["E", "F", "I"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.9"
 warn_unused_configs = true
 ignore_missing_imports = true
 strict = false
