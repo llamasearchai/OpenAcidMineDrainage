@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # Main application service
+  openacidminedrainage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: openacidminedrainage
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OSM_OPENAI_MODEL=${OSM_OPENAI_MODEL:-gpt-4o}
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./data:/app/data:ro
+    networks:
+      - acidmine-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import open_sedimentation_manager; print('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    command: ["osm-api"]
+
+  # API service with auto-reload for development
+  api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: openacidminedrainage-api-dev
+    ports:
+      - "8001:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OSM_OPENAI_MODEL=${OSM_OPENAI_MODEL:-gpt-4o}
+      - PYTHONPATH=/app/src
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    networks:
+      - acidmine-network
+    profiles:
+      - dev
+    command: ["uvicorn", "open_sedimentation_manager.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  # Worker service for background processing
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: openacidminedrainage-worker
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OSM_OPENAI_MODEL=${OSM_OPENAI_MODEL:-gpt-4o}
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./data:/app/data:ro
+    networks:
+      - acidmine-network
+    profiles:
+      - worker
+    command: ["python", "-c", "print('Worker service ready - implement background tasks here')"]
+
+  # Database service for data persistence
+  db:
+    image: postgres:15-alpine
+    container_name: openacidminedrainage-db
+    environment:
+      POSTGRES_DB: acidmine_db
+      POSTGRES_USER: acidmine_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - acidmine-network
+    profiles:
+      - db
+    restart: unless-stopped
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: openacidminedrainage-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - acidmine-network
+    profiles:
+      - cache
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Monitoring service with Prometheus metrics
+  monitoring:
+    build:
+      context: .
+      dockerfile: monitoring.Dockerfile
+    container_name: openacidminedrainage-monitoring
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - acidmine-network
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  acidmine-network:
+    driver: bridge

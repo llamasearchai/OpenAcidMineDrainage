@@ -1,0 +1,26 @@
+# Example configuration for OpenSedimentationManager
+# Copy to config/config.yaml and adjust paths for your environment.
+
+paths:
+  current_bathymetry: data/current_bathy.tif
+  baseline_bathymetry: data/baseline_bathy.tif
+  design_depth: data/design_depth.tif
+  flow_u: data/flow_u.tif
+  flow_v: data/flow_v.tif
+  red_band: data/red.tif
+  nir_band: data/nir.tif
+
+analysis:
+  ndvi_threshold: 0.3
+  sediment_threshold_m: 0.5
+  unit_cost_usd_per_m3: 25.0
+
+model:
+  steps: 200
+  dt: 0.5
+  diffusivity: 0.2
+  sink_rate: 0.01
+
+realtime:
+  input: data/realtime_flow.json
+
