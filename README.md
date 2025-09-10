@@ -42,6 +42,16 @@ A comprehensive Python monitoring and analysis system that provides definitive e
 - Run a simple PHREEQC speciation example (requires phreeqpy):
   - `oamd geochem`
 
+## FastAPI service
+- Start with Docker Compose:
+  - `docker compose up --build`
+- Health check:
+  - `curl http://localhost:8000/health`
+- Analyze endpoint:
+  - `curl -X POST http://localhost:8000/analyze -H 'Content-Type: application/json' -d '{"param":"pH","records":[]}'`
+- Forecast endpoint:
+  - `curl -X POST http://localhost:8000/forecast -H 'Content-Type: application/json' -d '{"site_id":"D1","param":"pH","horizon":14,"records":[]}'`
+
 ## Testing
 - With tox (uses uv automatically via tox-uv):
   - `tox -q`
