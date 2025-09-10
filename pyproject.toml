@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "open-acid-mine-drainage"
-version = "1.0.0"
+version = "1.1.0"
 description = "Comprehensive Python monitoring and analysis system for acid mine drainage (AMD) protection evidence."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -43,8 +43,8 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://example.com/"
-repository = "https://example.com/"
+homepage = "https://github.com/llamasearchai/OpenAcidMineDrainage"
+repository = "https://github.com/llamasearchai/OpenAcidMineDrainage"
 
 [project.scripts]
 oamd = "oamd.cli:main"

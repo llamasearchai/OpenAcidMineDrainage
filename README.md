@@ -1,5 +1,10 @@
 # OpenAcidMineDrainage
 
+<p align="center">
+  <img src="OpenAcidMineDrainage.png" alt="OpenAcidMineDrainage Logo" width="420" />
+  
+</p>
+
 A comprehensive Python monitoring and analysis system that provides definitive evidence of environmental protection by tracking acid mine drainage (AMD) impacts on surrounding natural assets. The system integrates:
 
 - Real-time water quality monitoring (pH, conductivity, dissolved metals, sulfate) at multiple upstream/downstream/control sites
@@ -65,4 +70,3 @@ A comprehensive Python monitoring and analysis system that provides definitive e
 
 ## Notes
 - Some integrations (MODFLOW executables, PHREEQC database) are optional and not required for core functionality. Commands detect missing external tools gracefully and still produce meaningful outputs.
-
