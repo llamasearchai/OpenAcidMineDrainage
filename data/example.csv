@@ -1,0 +1,6 @@
+timestamp,site_id,site_type,pH,conductivity_uScm,Fe_mg_L,Mn_mg_L,Al_mg_L,sulfate_mg_L
+2024-01-01T00:00:00Z,U1,upstream,7.2,350,0.05,0.01,0.02,20
+2024-01-01T00:00:00Z,D1,downstream,7.1,360,0.04,0.02,0.02,22
+2024-01-02T00:00:00Z,C1,control,7.2,345,0.05,0.01,0.02,21
+2024-01-02T00:00:00Z,B1,baseline,7.2,348,0.05,0.01,0.02,20.5
+

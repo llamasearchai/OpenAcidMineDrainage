@@ -1,0 +1,103 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "open-acid-mine-drainage"
+version = "0.1.0"
+description = "Comprehensive Python monitoring and analysis system for acid mine drainage (AMD) protection evidence."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "OpenAcidMineDrainage Maintainers" }
+]
+keywords = [
+  "environment", "water quality", "hydrology", "geochemistry",
+  "statistics", "machine-learning", "compliance", "monitoring"
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering",
+]
+
+dependencies = [
+  "numpy>=1.23",
+  "pandas>=2.0",
+  "scipy>=1.9",
+  "statsmodels>=0.13",
+  "scikit-learn>=1.2",
+  "matplotlib>=3.7",
+  "seaborn>=0.12",
+  "pydantic>=2.5",
+  "PyYAML>=6.0",
+  "requests>=2.31",
+]
+
+[project.urls]
+homepage = "https://example.com/"
+repository = "https://example.com/"
+
+[project.scripts]
+oamd = "oamd.cli:main"
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+]
+dev = [
+  "tox>=4.14",
+  "build>=1.2.1",
+  "ruff>=0.5.6",
+  "mypy>=1.10",
+  "types-PyYAML>=6.0.12",
+  "pre-commit>=3.7",
+  "twine>=5.1.1",
+]
+# Optional integrations
+hydro = ["flopy>=3.3"]
+geochem = ["phreeqpy>=0.0.10"]
+viz = ["plotly>=5.22", "kaleido>=0.2.1"]
+
+[tool.hatch.build]
+packages = ["src/oamd"]
+include = [
+  "README.md",
+  "LICENSE",
+  "src/oamd/**",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+ignore_missing_imports = true
+strict = false
+
+[tool.uv]
+# Developer convenience when using uv
+dev-dependencies = [
+  "pytest",
+  "pytest-cov",
+  "tox",
+  "ruff",
+  "mypy",
+  "build",
+  "twine",
+  "types-PyYAML",
+]
+
